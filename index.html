@@ -202,8 +202,8 @@
     <!-- CUADRÍCULA DE 4 BOTONES DE SECCIÓN -->
     <div class="grid grid-cols-2 gap-3.5 relative z-10">
       
-      <!-- Servicios -->
-      <button onclick="openModal('servicios')" class="btn-glow-blue bg-slate-950/60 rounded-2xl p-4 flex flex-col items-center text-center group">
+      <!-- Servicios (Abre Carrusel a pantalla completa) -->
+      <button onclick="openCarousel()" class="btn-glow-blue bg-slate-950/60 rounded-2xl p-4 flex flex-col items-center text-center group">
         <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 mb-2 border border-cyan-500/20">
           <i class="fa-solid fa-mobile-screen-button text-xl"></i>
         </div>
@@ -318,6 +318,33 @@
     </div>
   </div>
 
+  <!-- CARRUSEL DE SERVICIOS (PANTALLA COMPLETA, SIN BORDES) -->
+  <div id="carouselOverlay" class="fixed inset-0 bg-black z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+    
+    <!-- Botón Cerrar Limpio -->
+    <button onclick="closeCarousel()" class="absolute top-6 right-6 z-50 w-11 h-11 bg-black/40 text-white rounded-full flex items-center justify-center hover:bg-black/90 transition-colors backdrop-blur-sm">
+      <i class="fa-solid fa-xmark text-2xl"></i>
+    </button>
+    
+    <!-- Contenedor de la Imagen Limpia (Sin bordes) -->
+    <div class="relative w-full h-full flex items-center justify-center">
+      <img id="carouselImage" src="" alt="Servicios Esteban Cell" class="w-full h-full object-scale-down transition-opacity duration-300" style="image-rendering: high-quality;" />
+    </div>
+    
+    <!-- Controles Prev / Next Limpios -->
+    <button onclick="prevSlide()" class="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-black/40 text-white rounded-full flex items-center justify-center hover:bg-black/90 transition-colors backdrop-blur-sm">
+      <i class="fa-solid fa-chevron-left text-xl"></i>
+    </button>
+    <button onclick="nextSlide()" class="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-black/40 text-white rounded-full flex items-center justify-center hover:bg-black/90 transition-colors backdrop-blur-sm">
+      <i class="fa-solid fa-chevron-right text-xl"></i>
+    </button>
+    
+    <!-- Puntos Indicadores -->
+    <div id="carouselIndicators" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex gap-2.5">
+      <!-- Los puntos se inyectan dinámicamente con JS -->
+    </div>
+  </div>
+
   <script>
     const CONFIG = {
       whatsapp: "3112633132",
@@ -388,44 +415,6 @@
                 <i class="fa-brands fa-waze"></i> Ir con Waze
               </a>
             </div>
-          </div>
-        `
-      },
-      servicios: {
-        title: "Nuestros Servicios",
-        color: "cyan",
-        icon: "fa-solid fa-screwdriver-wrench",
-        html: `
-          <div class="space-y-3.5">
-            <p class="text-slate-400 text-xs mb-1">Somos expertos en reparaciones express y soluciones de software.</p>
-            
-            <div class="flex items-start gap-3 bg-slate-950/40 border border-cyan-500/20 p-2.5 rounded-xl">
-              <div class="text-cyan-400 text-md mt-0.5"><i class="fa-solid fa-mobile-retro"></i></div>
-              <div>
-                <h4 class="brand-font text-xs font-bold text-slate-200 uppercase">Cambio de Pantallas</h4>
-                <p class="text-[10px] text-slate-400 leading-normal">Repuestos originales y homologados de excelente calidad.</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 bg-slate-950/40 border border-cyan-500/20 p-2.5 rounded-xl">
-              <div class="text-cyan-400 text-md mt-0.5"><i class="fa-solid fa-microchip"></i></div>
-              <div>
-                <h4 class="brand-font text-xs font-bold text-slate-200 uppercase">Soporte Técnico Especializado</h4>
-                <p class="text-[10px] text-slate-400 leading-normal">Reparación de placas base, microsoldadura y pines de carga.</p>
-              </div>
-            </div>
-
-            <div class="flex items-start gap-3 bg-slate-950/40 border border-cyan-500/20 p-2.5 rounded-xl">
-              <div class="text-cyan-400 text-md mt-0.5"><i class="fa-solid fa-shield-halved"></i></div>
-              <div>
-                <h4 class="brand-font text-xs font-bold text-slate-200 uppercase">Accesorios Premium</h4>
-                <p class="text-[10px] text-slate-400 leading-normal">Cargadores de alta velocidad, protectores de hidrogel y estuches.</p>
-              </div>
-            </div>
-
-            <button onclick="goToWhatsApp()" class="brand-font w-full mt-2 py-2.5 bg-cyan-500 text-slate-950 font-bold text-xs rounded-lg uppercase tracking-wider hover:bg-cyan-600 transition-colors">
-              Cotizar Servicio
-            </button>
           </div>
         `
       },
@@ -649,6 +638,73 @@
       document.body.removeChild(newLink);
       URL.revokeObjectURL(url);
     }
+
+    // --- LÓGICA DEL CARRUSEL DE IMÁGENES A PANTALLA COMPLETA ---
+    const carouselImages = [
+      'https://i.postimg.cc/FHxB4FTV/2.png',
+      'https://i.postimg.cc/q7MZMfYT/3.png',
+      'https://i.postimg.cc/0NWXzWg3/4.png',
+      'https://i.postimg.cc/wBf41fKn/5.png',
+      'https://i.postimg.cc/Zq7sW7k2/6.png',
+      'https://i.postimg.cc/8CKX7KQG/7.png',
+      'https://i.postimg.cc/s26HM6dX/8.png',
+      'https://i.postimg.cc/DzjpSjk8/9.png'
+    ];
+    let currentSlideIndex = 0;
+
+    function openCarousel() {
+      currentSlideIndex = 0;
+      updateCarouselUI();
+      const overlay = document.getElementById('carouselOverlay');
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+    }
+
+    function closeCarousel() {
+      const overlay = document.getElementById('carouselOverlay');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+    }
+
+    function nextSlide() {
+      currentSlideIndex = (currentSlideIndex + 1) % carouselImages.length;
+      updateCarouselUI();
+    }
+
+    function prevSlide() {
+      currentSlideIndex = (currentSlideIndex - 1 + carouselImages.length) % carouselImages.length;
+      updateCarouselUI();
+    }
+
+    function updateCarouselUI() {
+      const img = document.getElementById('carouselImage');
+      // Efecto suave de transición
+      img.style.opacity = '0';
+      
+      setTimeout(() => {
+        img.src = carouselImages[currentSlideIndex];
+        img.style.opacity = '1';
+      }, 150);
+
+      // Actualizar puntos de navegación
+      const dots = document.getElementById('carouselIndicators');
+      dots.innerHTML = carouselImages.map((_, i) => `
+        <div class="w-2 h-2 rounded-full transition-all duration-300 ${i === currentSlideIndex ? 'bg-cyan-400 scale-125 shadow-[0_0_8px_rgba(0,173,255,0.8)]' : 'bg-white/40'}"></div>
+      `).join('');
+    }
+
+    // --- SOPORTE TÁCTIL (SWIPE) PARA MÓVILES ---
+    let touchstartX = 0;
+    let touchendX = 0;
+
+    document.getElementById('carouselOverlay').addEventListener('touchstart', e => {
+      touchstartX = e.changedTouches[0].screenX;
+    });
+
+    document.getElementById('carouselOverlay').addEventListener('touchend', e => {
+      touchendX = e.changedTouches[0].screenX;
+      // Si el usuario desliza más de 50px de diferencia, cambia la imagen
+      if (touchendX < touchstartX - 50) nextSlide();
+      if (touchendX > touchstartX + 50) prevSlide();
+    });
 
   </script>
 </body>
