@@ -376,14 +376,14 @@
         icon: "fa-solid fa-circle-info",
         html: `
           <div class="text-center flex flex-col items-center">
-            <div class="w-full max-h-[70vh] overflow-y-auto rounded-2xl bg-black border border-slate-800 relative flex items-center justify-center">
-              <img src="1.png" alt="Esteban Cell Quienes Somos Infografia" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=80'; document.getElementById('imgLoadError').classList.remove('hidden');" class="w-full h-auto rounded-2xl object-contain">
+            <div class="w-full max-h-[75vh] overflow-y-auto rounded-2xl bg-black border border-slate-800 relative flex items-center justify-center">
+              <img src="1.png" alt="Esteban Cell Quienes Somos Infografia" onerror="this.onerror=null; this.src='https://placehold.co/500x800/000000/ffffff?text=Imagen+1.png+no+encontrada'; document.getElementById('imgLoadError').classList.remove('hidden');" class="w-full h-auto rounded-2xl object-contain">
               
               <!-- Feedback en caso de que 1.png no exista en el mismo directorio todavía -->
               <div id="imgLoadError" class="absolute inset-0 bg-slate-950/95 hidden flex flex-col items-center justify-center p-4 text-center z-10">
                 <i class="fa-solid fa-circle-exclamation text-amber-500 text-3xl mb-2"></i>
                 <p class="text-xs font-bold text-slate-200">¿No puedes visualizar la imagen?</p>
-                <p class="text-[10px] text-slate-400 mt-1 leading-normal">Recuerda colocar el archivo <strong>"1.png"</strong> en la misma ruta o carpeta para que se renderice correctamente en tu servidor.</p>
+                <p class="text-[10px] text-slate-400 mt-1 leading-normal">Recuerda colocar el archivo <strong>"1.png"</strong> en la misma carpeta donde subas este archivo <code>index.html</code>.</p>
               </div>
             </div>
           </div>
@@ -717,7 +717,7 @@
     }
 
     // --- LÓGICA DEL CARRUSEL DE IMÁGENES A PANTALLA COMPLETA ---
-    const carouselImages = ['2.png', '3_2.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9_2.png'];
+    const carouselImages = ['2_2.webp', '3_4.webp', '4_2.webp', '5_2.webp', '6_2.webp', '7_2.webp', '8_2.webp', '9_4.webp'];
     let currentSlideIndex = 0;
 
     function openCarousel() {
