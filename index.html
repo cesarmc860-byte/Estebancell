@@ -203,7 +203,7 @@
     <div class="grid grid-cols-2 gap-3.5 relative z-10">
       
       <!-- Servicios -->
-      <button onclick="openCarousel()" class="btn-glow-blue bg-slate-950/60 rounded-2xl p-4 flex flex-col items-center text-center group">
+      <button onclick="openModal('servicios')" class="btn-glow-blue bg-slate-950/60 rounded-2xl p-4 flex flex-col items-center text-center group">
         <div class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center text-cyan-400 mb-2 border border-cyan-500/20">
           <i class="fa-solid fa-mobile-screen-button text-xl"></i>
         </div>
@@ -318,33 +318,6 @@
     </div>
   </div>
 
-  <!-- CARRUSEL DE SERVICIOS (PANTALLA COMPLETA) -->
-  <div id="carouselOverlay" class="fixed inset-0 bg-black z-[100] flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
-    
-    <!-- Botón Cerrar -->
-    <button onclick="closeCarousel()" class="absolute top-6 right-6 z-50 w-11 h-11 bg-black/60 text-white rounded-full flex items-center justify-center hover:bg-black/90 transition-colors border border-white/20 shadow-lg backdrop-blur-sm">
-      <i class="fa-solid fa-xmark text-2xl"></i>
-    </button>
-    
-    <!-- Contenedor de la Imagen Limpia -->
-    <div class="relative w-full h-full flex items-center justify-center">
-      <img id="carouselImage" src="" alt="Servicios Esteban Cell" class="w-full h-full object-contain transition-opacity duration-300" />
-    </div>
-    
-    <!-- Controles Prev / Next -->
-    <button onclick="prevSlide()" class="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-black/40 text-white rounded-full flex items-center justify-center hover:bg-black/80 transition-colors border border-white/10 backdrop-blur-sm">
-      <i class="fa-solid fa-chevron-left text-xl"></i>
-    </button>
-    <button onclick="nextSlide()" class="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 z-50 w-12 h-12 bg-black/40 text-white rounded-full flex items-center justify-center hover:bg-black/80 transition-colors border border-white/10 backdrop-blur-sm">
-      <i class="fa-solid fa-chevron-right text-xl"></i>
-    </button>
-    
-    <!-- Puntos Indicadores -->
-    <div id="carouselIndicators" class="absolute bottom-8 left-1/2 -translate-x-1/2 z-50 flex gap-2.5">
-      <!-- Los puntos se inyectan dinámicamente con JS -->
-    </div>
-  </div>
-
   <script>
     const CONFIG = {
       whatsapp: "3112633132",
@@ -362,11 +335,6 @@
       const message = encodeURIComponent("Quiero mas informacion sobre sus productos y servicios");
       window.open(`https://wa.me/57${CONFIG.whatsapp}?text=${message}`, '_blank');
     }
-
-    // La función makeDirectCall ya no es necesaria pues usamos una etiqueta <a> directamente
-    // function makeDirectCall() {
-    //   window.location.href = `tel:+57${CONFIG.telefono}`;
-    // }
 
     const MODAL_DATA = {
       // MODAL ¿QUIÉNES SOMOS? - Muestra ÚNICAMENTE la infografía
@@ -681,64 +649,6 @@
       document.body.removeChild(newLink);
       URL.revokeObjectURL(url);
     }
-
-    // --- LÓGICA DEL CARRUSEL DE IMÁGENES A PANTALLA COMPLETA ---
-    const carouselImages = ['2_2.webp', '3_4.webp', '4_2.webp', '5_2.webp', '6_2.webp', '7_2.webp', '8_2.webp', '9_4.webp'];
-    let currentSlideIndex = 0;
-
-    function openCarousel() {
-      currentSlideIndex = 0;
-      updateCarouselUI();
-      const overlay = document.getElementById('carouselOverlay');
-      overlay.classList.remove('opacity-0', 'pointer-events-none');
-    }
-
-    function closeCarousel() {
-      const overlay = document.getElementById('carouselOverlay');
-      overlay.classList.add('opacity-0', 'pointer-events-none');
-    }
-
-    function nextSlide() {
-      currentSlideIndex = (currentSlideIndex + 1) % carouselImages.length;
-      updateCarouselUI();
-    }
-
-    function prevSlide() {
-      currentSlideIndex = (currentSlideIndex - 1 + carouselImages.length) % carouselImages.length;
-      updateCarouselUI();
-    }
-
-    function updateCarouselUI() {
-      const img = document.getElementById('carouselImage');
-      // Efecto suave de transición
-      img.style.opacity = '0';
-      
-      setTimeout(() => {
-        img.src = carouselImages[currentSlideIndex];
-        img.style.opacity = '1';
-      }, 150);
-
-      // Actualizar puntos de navegación
-      const dots = document.getElementById('carouselIndicators');
-      dots.innerHTML = carouselImages.map((_, i) => `
-        <div class="w-2 h-2 rounded-full transition-all duration-300 ${i === currentSlideIndex ? 'bg-cyan-400 scale-125 shadow-[0_0_8px_rgba(0,173,255,0.8)]' : 'bg-white/40'}"></div>
-      `).join('');
-    }
-
-    // --- SOPORTE TÁCTIL (SWIPE) PARA MÓVILES ---
-    let touchstartX = 0;
-    let touchendX = 0;
-
-    document.getElementById('carouselOverlay').addEventListener('touchstart', e => {
-      touchstartX = e.changedTouches[0].screenX;
-    });
-
-    document.getElementById('carouselOverlay').addEventListener('touchend', e => {
-      touchendX = e.changedTouches[0].screenX;
-      // Si el usuario desliza más de 50px de diferencia, cambia la imagen
-      if (touchendX < touchstartX - 50) nextSlide();
-      if (touchendX > touchstartX + 50) prevSlide();
-    });
 
   </script>
 </body>
